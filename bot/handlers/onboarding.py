@@ -11,7 +11,7 @@ USER_TYPE_LABELS = {
 
 async def ask_user_type():
     actions = [
-        cl.Action(name="set_type", value=key, label=label)
+        cl.Action(name="set_type", value=key, label=label, payload={"value": key})
         for key, label in USER_TYPE_LABELS.items()
     ]
     await cl.Message(
@@ -22,7 +22,7 @@ async def ask_user_type():
 
 @cl.action_callback("set_type")
 async def on_set_type(action: cl.Action):
-    user_type = action.value
+    user_type = action.payload["value"]
     label = USER_TYPE_LABELS.get(user_type, user_type)
     cl.user_session.set("user_type", user_type)
     cl.user_session.set("history", [])
