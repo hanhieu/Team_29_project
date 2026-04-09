@@ -1,7 +1,7 @@
 # Prototype — Xanh SM AI Support Chatbot
 
 ## Mô tả
-Chatbot AI hỗ trợ khách hàng Xanh SM trả lời câu hỏi theo từng nhóm người dùng (Hành khách, Tài xế Taxi, Tài xế Bike, Nhà hàng đối tác). Hệ thống dùng RAG (Retrieval-Augmented Generation) để tìm kiếm câu trả lời từ knowledge base chính thức và dữ liệu cộng đồng Facebook, sau đó sinh câu trả lời bằng GPT-4o theo luồng streaming.
+Chatbot AI hỗ trợ khách hàng Xanh SM trả lời câu hỏi theo từng nhóm người dùng (Hành khách, Tài xế Taxi, Tài xế Bike, Nhà hàng đối tác). Hệ thống dùng RAG (Retrieval-Augmented Generation) để tìm kiếm câu trả lời từ knowledge base chính thức và dữ liệu cộng đồng Facebook, sau đó sinh câu trả lời bằng GPT-4o theo luồng streaming. Ngoài RAG, agent còn được trang bị **tool calling** để tra cứu giá cước thực tế theo thành phố (Xanh SM Car, Luxury, Premium, phụ phí).
 
 ## Level
 - [ ] **Sketch** — Vẽ user journey trên giấy/slides, chưa build gì
@@ -28,9 +28,15 @@ RAG Retriever:
     ↓
 Deduplicate & merge (tối đa ~6 unique chunks)
     ↓
-GPT-4o stream response:
-  - [Chính thức]: ưu tiên trả lời trực tiếp
-  - [Cộng đồng]: chỉ dùng làm ngữ cảnh, không trích dẫn trực tiếp
+GPT-4o (tool_choice=auto) — Lượt 1:
+  ├─ Nếu model gọi tool lookup_fare(city, service_type):
+  │     └─ Tra Dataset/pricedata.json → trả kết quả markdown
+  │         ↓
+  │     GPT-4o stream — Lượt 2 (có tool result)
+  └─ Nếu không gọi tool:
+        GPT-4o stream trực tiếp
+          - [Chính thức]: ưu tiên trả lời
+          - [Cộng đồng]: chỉ dùng làm ngữ cảnh
 ```
 
 ## Tools và API đã dùng
@@ -42,7 +48,9 @@ GPT-4o stream response:
 | **Embedding** | `keepitreal/vietnamese-sbert` — SentenceTransformer cho tiếng Việt |
 | **Vector DB** | ChromaDB (persistent, local) |
 | **RAG** | Custom retriever: dual-search (user_type filter optional + no filter) + dedup, TOP_K=3 |
+| **Tool calling** | OpenAI function calling — `lookup_fare(city, service_type)` tra giá cước thực tế |
 | **Knowledge base** | FAQ chính thức (`data/qa.json`) + Facebook community posts (`Dataset/`) |
+| **Price data** | `Dataset/pricedata.json` — giá cước 45 thành phố × 4 loại (taxi, luxury, premium, two_ways) |
 | **Social crawler** | Apify Facebook Groups Scraper → `dataset_facebook-groups-scraper_*.json` |
 
 ## Cấu trúc project
@@ -53,9 +61,11 @@ Team_29_project/
 ├── config.py                 # API keys, model, constants
 ├── bot/
 │   ├── router.py             # Route theo session state
-│   └── handlers/
-│       ├── onboarding.py     # 4 nút chọn loại tài khoản
-│       └── chat.py           # RAG + GPT-4o streaming
+│   ├── handlers/
+│   │   ├── onboarding.py     # 4 nút chọn loại tài khoản
+│   │   └── chat.py           # RAG + GPT-4o streaming + tool calling
+│   └── tools/
+│       └── fare_data.py      # Tool lookup_fare: đọc pricedata.json, format markdown
 ├── rag/
 │   ├── vectorstore.py        # ChromaDB singleton client
 │   ├── retriever.py          # Dual-search + dedup
@@ -64,6 +74,8 @@ Team_29_project/
 ├── data/
 │   └── qa.json               # FAQ chính thức (4 user_type)
 └── Dataset/
+    ├── pricedata.json                            # Giá cước 45 thành phố × 4 loại dịch vụ
+    ├── cities_type.json                          # Danh sách thành phố hỗ trợ theo loại xe
     └── dataset_facebook-groups-scraper_*.json
 ```
 
@@ -73,6 +85,7 @@ Team_29_project/
 |---|---|---|
 | FAQ chính thức | `nguoi_dung`, `tai_xe_taxi`, `tai_xe_bike`, `nha_hang` | ~110 Q&A |
 | Facebook community | `tai_xe_taxi`, `tai_xe_bike` | Posts có topComments |
+| Giá cước (`pricedata.json`) | tất cả | 45 thành phố × 4 loại: `taxi`, `luxury`, `premium`, `two_ways` |
 
 ## Setup
 
