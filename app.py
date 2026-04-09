@@ -9,6 +9,12 @@ logging.basicConfig(
     format="%(asctime)s %(levelname)s %(name)s — %(message)s",
     datefmt="%H:%M:%S",
 )
+# Suppress noisy third-party loggers
+logging.getLogger("httpx").setLevel(logging.WARNING)
+logging.getLogger("watchfiles").setLevel(logging.WARNING)
+logging.getLogger("chainlit").setLevel(logging.WARNING)
+logging.getLogger("sentence_transformers").setLevel(logging.WARNING)
+logging.getLogger("chromadb").setLevel(logging.WARNING)
 
 
 @cl.on_chat_start

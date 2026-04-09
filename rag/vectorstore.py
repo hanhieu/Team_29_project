@@ -1,6 +1,12 @@
+import os
+
 import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
 from config import CHROMA_PATH, COLLECTION_NAME, EMBEDDING_MODEL
+
+os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
+os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")
+os.environ.setdefault("TQDM_DISABLE", "1")
 
 _collection = None
 
