@@ -1,6 +1,6 @@
 # Hackathon Day 6 — Checklist đầy đủ
 
-**Nhóm:** ___
+**Nhóm:** 29
 **Track:** XanhSM
 **Product:** AI Support Chatbot
 
