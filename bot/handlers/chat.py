@@ -39,6 +39,7 @@ Loại người dùng: {user_type_label}
 </constraints>
 '''
 
+BOT_NAME = "XanhSM"
 
 async def handle_chat(user_message: str, user_type: str):
     t0 = time.monotonic()
@@ -83,7 +84,7 @@ async def handle_chat(user_message: str, user_type: str):
 
     messages = [{"role": "system", "content": system_prompt}] + history
 
-    msg = cl.Message(content="")
+    msg = cl.Message(content="", author=BOT_NAME)
     await msg.send()
 
     full_response = ""
