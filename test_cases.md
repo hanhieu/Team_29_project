@@ -62,3 +62,7 @@ Nếu bạn có thêm bất kỳ câu hỏi nào khác, hãy cho tôi biết!
 
 # Test 4: Đăng ký làm tài xế XanhSM
 Q: Tôi muốn làm tài xế XanhSM
+
+
+# Test 5: Câu hỏi gợi ý 
+![Câu hỏi gợi ý](image.png)

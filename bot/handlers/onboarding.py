@@ -10,7 +10,7 @@ USER_TYPE_LABELS = {
 SUGGESTED_QUESTIONS = [
     ("Làm thế nào để đặt chuyến xe di chuyển trên ứng dụng?", "🚗 Đặt chuyến xe"),
     ("Giá cước các dịch vụ Xanh SM hiện tại là bao nhiêu?", "💰 Giá cước dịch vụ"),
-    ("Tôi muốn đăng ký làm tài xế Xanh SM thì cần điều kiện gì?", "📋 Đăng ký tài xế"),
+    ("Tôi muốn đăng ký làm tài xế Xanh SM", "📋 Đăng ký tài xế"),
     ("Tôi gặp tai nạn", "🆘 Tôi gặp tai nạn"),
 ]
 
