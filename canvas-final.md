@@ -2,7 +2,6 @@
 
 **Nhóm:** 29 · **Track:** XanhSM
 
-Điền Canvas cho product AI của nhóm. Mỗi ô có câu hỏi guide — trả lời trực tiếp, xóa phần in nghiêng khi điền.
 
 ---
 
