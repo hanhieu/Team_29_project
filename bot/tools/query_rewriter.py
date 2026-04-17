@@ -9,13 +9,13 @@ Trả về câu gốc ngay nếu câu hỏi đã rõ ràng và độc lập.
 import logging
 
 from openai import AsyncOpenAI
-from config import OPENAI_API_KEY
+from config import settings
 
 logger = logging.getLogger(__name__)
 
-_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+_client = AsyncOpenAI(api_key=settings.openai_api_key)
 
-_REWRITE_MODEL = "gpt-4o-mini"   # model nhẹ, chỉ dùng cho rewrite
+_REWRITE_MODEL = settings.openai_model_mini   # model nhẹ, chỉ dùng cho rewrite
 
 _SYSTEM_PROMPT = """\
 Bạn là một module xử lý ngôn ngữ tự nhiên. Nhiệm vụ của bạn là viết lại câu hỏi \

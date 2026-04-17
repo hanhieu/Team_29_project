@@ -2,7 +2,10 @@ import os
 
 import chromadb
 from chromadb.utils.embedding_functions import SentenceTransformerEmbeddingFunction
-from config import CHROMA_PATH, COLLECTION_NAME, EMBEDDING_MODEL
+from config import settings
+CHROMA_PATH = settings.chroma_path
+COLLECTION_NAME = settings.collection_name
+EMBEDDING_MODEL = settings.embedding_model
 
 os.environ.setdefault("TOKENIZERS_PARALLELISM", "false")
 os.environ.setdefault("TRANSFORMERS_VERBOSITY", "error")

@@ -5,11 +5,11 @@ Chạy trước pipeline RAG để routing sớm.
 
 import logging
 from openai import AsyncOpenAI
-from config import OPENAI_API_KEY
+from config import settings
 
 logger = logging.getLogger(__name__)
 
-_client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+_client = AsyncOpenAI(api_key=settings.openai_api_key)
 
 _SYSTEM_PROMPT = """\
 Phân loại intent của tin nhắn người dùng gửi đến chatbot hỗ trợ dịch vụ Xanh SM.
@@ -30,7 +30,7 @@ async def detect_intent(message: str) -> str:
     """
     try:
         resp = await _client.chat.completions.create(
-            model="gpt-4o-mini",
+            model=settings.openai_model_mini,
             messages=[
                 {"role": "system", "content": _SYSTEM_PROMPT},
                 {"role": "user",   "content": message},

@@ -4,14 +4,17 @@ import time
 
 import chainlit as cl
 from openai import AsyncOpenAI
-from config import OPENAI_API_KEY, OPENAI_MODEL, TOP_K
+from config import settings
 from rag.retriever import retrieve
 from bot.tools.fare_data import FARE_TOOL_DEFINITION, execute_tool as _fare_execute
 from bot.tools.query_rewriter import rewrite_query
+from bot.middleware.cost_guard import record_cost
 
 logger = logging.getLogger(__name__)
 
-client = AsyncOpenAI(api_key=OPENAI_API_KEY)
+client = AsyncOpenAI(api_key=settings.openai_api_key)
+OPENAI_MODEL = settings.openai_model
+TOP_K = settings.top_k
 
 SYSTEM_TEMPLATE = '''<persona>
 Bạn là Trợ lý AI Hỗ trợ của Xanh SM.
@@ -187,8 +190,12 @@ async def _chat_with_tools(messages: list[dict], msg: cl.Message) -> str:
                 if tc_chunk.function and tc_chunk.function.arguments:
                     tool_calls_acc[idx]["arguments"] += tc_chunk.function.arguments
 
-    # Không có tool call → trả về luôn
+    # Không có tool call → record cost estimate and return
     if finish_reason != "tool_calls" or not tool_calls_acc:
+        # Estimate: 4 chars ≈ 1 token
+        est_input = sum(len(str(m.get("content", ""))) for m in messages) // 4
+        est_output = len(first_response_content) // 4
+        record_cost(est_input, est_output, model=OPENAI_MODEL)
         return first_response_content
 
     # --- Thực thi tool calls ---
@@ -236,5 +243,10 @@ async def _chat_with_tools(messages: list[dict], msg: cl.Message) -> str:
         if delta:
             final_response += delta
             await msg.stream_token(delta)
+
+    # Record cost for both LLM turns
+    est_input = sum(len(str(m.get("content", ""))) for m in updated_messages) // 4
+    est_output = len(final_response) // 4
+    record_cost(est_input, est_output, model=OPENAI_MODEL)
 
     return final_response

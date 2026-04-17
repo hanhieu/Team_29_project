@@ -19,9 +19,11 @@ from chainlit.data import BaseDataLayer
 from chainlit.data.utils import queue_until_user_message
 from chainlit.types import Feedback
 
+from config import settings
+
 logger = logging.getLogger(__name__)
 
-FEEDBACK_FILE = Path("data/feedback.jsonl")
+FEEDBACK_FILE = Path(settings.feedback_path)
 FEEDBACK_FILE.parent.mkdir(parents=True, exist_ok=True)
 
 
