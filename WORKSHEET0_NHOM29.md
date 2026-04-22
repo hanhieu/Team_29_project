@@ -2,7 +2,7 @@
 
 **Nhóm:** 29 · **Lớp:** E403  
 **Thời gian:** 08:15–08:40  
-**Chủ đề xuyên suốt:** Chatbot AI hỗ trợ đa vai trò trong hệ sinh thái Xanh SM
+**Chủ đề xuyên suốt:** Trợ lý ảo AI Agent hỗ trợ đa vai trò trong hệ sinh thái Xanh SM
 
 ---
 
@@ -11,16 +11,13 @@ Xác định nhóm đã build được gì trong 15 ngày và chốt chủ đề
 
 ---
 
-## 2–3 Kỹ năng nhóm tự tin nhất
+## 3 Kỹ năng nhóm tự tin nhất
 
-1. **RAG pipeline với ChromaDB + Vietnamese SBERT embedding**  
-   Đã implement dual-search retriever: search 1 lọc theo `user_type`, search 2 unfiltered fallback, deduplication trước khi trả context cho LLM. Embedding dùng `keepitreal/vietnamese-sbert` (~400 MB) self-hosted, zero extra cost.
+1. **Vibe-coding**
 
-2. **Tool calling / function calling với GPT-4o**  
-   Đã implement `lookup_fare(city, service_type)` tra cứu giá cước thực tế cho 45 tỉnh thành × 4 loại dịch vụ từ `Dataset/pricedata.json`. Bot tự gọi tool khi nhận ra câu hỏi giá cước, trả bảng markdown có cấu trúc.
+2. **Crawl data + tiền xử lí dữ liệu**
 
-3. **Intent classification + multi-turn conversation handling với Chainlit**  
-   Intent detector (GPT-4o-mini) phân loại 3 path: `driver_registration` → guided 5-step form, `human_escalation` → hotline, `general` → RAG chat. Query rewriter giải quyết đại từ và follow-up trước khi retrieval.
+3. **Xây dựng luồng RAG end-to-end**
 
 ---
 
@@ -62,7 +59,7 @@ Chatbot AI hỗ trợ khách hàng Xanh SM — nền tảng xe điện (taxi + b
 |---------|---------|
 | **Sản phẩm giải quyết bài toán gì?** | Người dùng Xanh SM (hành khách, tài xế, đối tác) mất thời gian tìm thông tin qua nhiều kênh rời rạc — website, hotline 1900 2088, mạng xã hội — không phân loại theo vai trò. Chatbot trả lời tức thì (<3s), phân loại theo user role, lọc context đúng nhóm từ knowledge base, thay thế hotline cho 80% câu hỏi thông thường. |
 | **Ai là người dùng chính?** | 4 nhóm: Hành khách (đặt xe, hỏi giá, hỏi khu vực), Tài xế Taxi (chính sách hoa hồng, BHXH, thu nhập), Tài xế Bike (đăng ký, yêu cầu bằng A1/A2, quyền lợi), Nhà hàng đối tác (onboarding, hoa hồng, quy trình ký kết). |
-| **Vì sao phù hợp để phân tích deployment và cost?** | Hệ thống đã có kiến trúc rõ ràng (RAG + LLM + tool calling + middleware), data thực tế (110+ Q&A chính thức + Facebook community data 5.3 MB, 45 tỉnh giá cước), có cost guard và metrics endpoint. Đang chạy được — đủ để phân tích production-readiness một cách cụ thể và có số liệu thực. |
+| **Vì sao phù hợp để phân tích deployment và cost?** | Hệ thống đã có mô tả người dùng và luồng sử dụng, kiến trúc rõ ràng (RAG + LLM + tool calling + middleware), data thực tế (110+ Q&A chính thức + Facebook community data 5.3 MB, 45 tỉnh giá cước), có cost guard và metrics endpoint. Đang chạy được — đủ để phân tích production-readiness một cách cụ thể, ước lượng được traffic, dữ liệu và cost. |
 
 ---
 
